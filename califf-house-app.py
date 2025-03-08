@@ -18,7 +18,7 @@ st.write("""
 
 #Loads the Boston House Price Dataset
 boston = fetch_california_housing()
-st.balloons()
+
 
 st.write("--------")
 
@@ -95,6 +95,7 @@ prediction = model.predict(df)
 st.subheader('Prediction of MEDV')
 st.write(prediction)
 st.write('---')
+st.balloons()
 
 
 #Visualization
