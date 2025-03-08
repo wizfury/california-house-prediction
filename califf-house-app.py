@@ -103,38 +103,40 @@ features = st.multiselect("Select features",X.columns,default=X.columns.tolist()
 target = str(boston.target_names[0])
 st.write(f"Target: {target}")
 
-
-#Scatter Plot
-if features:
-    
-    st.write("Scatter Plot")
-    fig,ax = plt.subplots()
-    for feature in features:
-        sns.scatterplot(x=X[feature],y=Y[target],ax=ax,label=feature)
-    ax.set_xlabel("Features")
-    ax.set_ylabel("Median House value")
-    ax.legend()
-    st.pyplot(fig)
-    
-    #Pair plot
-    st.write("## Pair Plot")
-    pair_plot = sns.pairplot(X+Y)
-    data = pd.concat([X,Y],axis=1)
-    pair_plot = sns.pairplot(data[features+[target]])
-    st.pyplot(pair_plot)
-    
-    
-    #Regression line plot
-    st.write("### Regression Line Plot")
-    for feature in features:
-        fig, ax = plt.subplots()
-        sns.regplot(x=data[feature], y=data[target], ax=ax, label=feature)
+@st.cache_data
+def plots():
+    #Scatter Plot
+    if features:
+        
+        st.write("Scatter Plot")
+        fig,ax = plt.subplots()
+        for feature in features:
+            sns.scatterplot(x=X[feature],y=Y[target],ax=ax,label=feature)
         ax.set_xlabel("Features")
-        ax.set_ylabel("Median House Value")
+        ax.set_ylabel("Median House value")
         ax.legend()
         st.pyplot(fig)
-    
-    
+        
+        #Pair plot
+        st.write("## Pair Plot")
+        pair_plot = sns.pairplot(X+Y)
+        data = pd.concat([X,Y],axis=1)
+        pair_plot = sns.pairplot(data[features+[target]])
+        st.pyplot(pair_plot)
+        
+        
+        #Regression line plot
+        st.write("### Regression Line Plot")
+        for feature in features:
+            fig, ax = plt.subplots()
+            sns.regplot(x=data[feature], y=data[target], ax=ax, label=feature)
+            ax.set_xlabel(feature)
+            ax.set_ylabel(target)
+            ax.legend()
+            st.pyplot(fig)
+            
+plots()
+        
     
 
 
