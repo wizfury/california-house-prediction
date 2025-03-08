@@ -1,9 +1,10 @@
 import streamlit as st 
 import pandas as pd 
-import shap
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
 from sklearn.datasets import fetch_california_housing
 import pickle
+import seaborn as sns 
+
 
 
 st.write("""
@@ -17,6 +18,7 @@ st.write("""
 
 #Loads the Boston House Price Dataset
 boston = fetch_california_housing()
+st.balloons()
 
 st.write("--------")
 
@@ -95,15 +97,49 @@ st.write(prediction)
 st.write('---')
 
 
-st.subheader("Visulaizations")
-explainer = shap.TreeExplainer(model)
-shap_values = explainer.shap_values(X)
+#Visualization
 
-st.header('Feature Importance')
-plt.title('Feature importance based on SHAP values')
-shap.summary_plot(shap_values, X)
-st.pyplot(bbox_inches='tight')
-st.write('---')
+features = st.multiselect("Select features",X.columns,default=X.columns.tolist())
+target = str(boston.target_names[0])
+st.write(f"Target: {target}")
+
+
+#Scatter Plot
+if features:
+    
+    st.write("Scatter Plot")
+    fig,ax = plt.subplots()
+    for feature in features:
+        sns.scatterplot(x=X[feature],y=Y[target],ax=ax,label=feature)
+    ax.set_xlabel("Features")
+    ax.set_ylabel("Median House value")
+    ax.legend()
+    st.pyplot(fig)
+    
+    #Pair plot
+    st.write("## Pair Plot")
+    pair_plot = sns.pairplot(X+Y)
+    data = pd.concat([X,Y],axis=1)
+    pair_plot = sns.pairplot(data[features+[target]])
+    st.pyplot(pair_plot)
+    
+    
+    #Regression line plot
+    st.write("### Regression Line Plot")
+    for feature in features:
+        fig, ax = plt.subplots()
+        sns.regplot(x=data[feature], y=data[target], ax=ax, label=feature)
+        ax.set_xlabel("Features")
+        ax.set_ylabel("Median House Value")
+        ax.legend()
+        st.pyplot(fig)
+    
+    
+    
+
+
+
+    
 
 
 
